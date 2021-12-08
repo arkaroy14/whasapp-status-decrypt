@@ -16,25 +16,16 @@ while [ $COUNT -le $STOP ]
 do
 id=$(sed "$COUNT!d" 'text/id.txt')
 echo "Making $COUNT text"
-sqlite3 msgstore.db -cmd ".headers off" "select message_url from message_media where message_row_id = $id;" >> 'text/url.txt'
+url=$(sqlite3 msgstore.db -cmd ".headers off" "select message_url from message_media where message_row_id = $id;")
 
-sqlite3 msgstore.db -cmd ".headers off" "select mime_type from message_media where message_row_id = $id;" >> 'text/type.txt'
+type=$(sqlite3 msgstore.db -cmd ".headers off" "select mime_type from message_media where message_row_id = $id;")
 
-sqlite3 msgstore.db -cmd ".headers off" "select hex(media_key) from message_media where message_row_id = $id;" >> 'text/hex.txt'
+hex=$(sqlite3 msgstore.db -cmd ".headers off" "select hex(media_key) from message_media where message_row_id = $id;")
 
-url=$(sed "$COUNT!d" 'text/url.txt')
-type=$(sed "$COUNT!d" 'text/type.txt')
-hex=$(sed "$COUNT!d" 'text/hex.txt')
 text=$(sed "$COUNT!d" 'text/text.txt')
 jid=$(sed "$COUNT!d" 'text/jid.txt')
 
 pno=$(sqlite3 msgstore.db -cmd ".headers off" "select user from jid where _id = $jid;")
-if [ -z "$url" ]
-then
-echo "null" >> 'text/url.txt'
-echo "null" >> 'text/type.txt'
-echo "null" >> 'text/hex.txt'
-fi
 
 if [ "$type" = "video/mp4" ]
 then
