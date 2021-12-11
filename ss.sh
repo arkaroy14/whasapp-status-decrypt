@@ -35,7 +35,7 @@ else
 tt=1
 ff=".jpeg"
 fi
-
+text=$(echo $text | sed 's/\//\ or /g')
 curl -O $url
 
 fn=$(echo $url | sed 's:.*/::')
