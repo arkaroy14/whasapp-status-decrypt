@@ -41,8 +41,8 @@ curl -O $url
 fn=$(echo $url | sed 's:.*/::')
 
 echo "$COUNT downloading"
-echo $tt
-echo $pno
+#echo $tt
+echo $pno--$text
 ./whatsapp-media-decrypt -o "$COUNT)$pno($text)$ff" -t $tt ./$fn $hex
 
 COUNT=$(($COUNT+1))
