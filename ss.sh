@@ -1,20 +1,24 @@
-#rm *.jpeg
-#rm *.mp4
-#rm -rf text
-#mkdir text
-mkdir $(date +%d-%m-%Y)
+yr=$(date +"%Y")
+mnt=$(date +"%B")
 fol=$(date +%d-%m-%Y)
-mkdir $fol/text
-rm $fol/*.jpeg
-rm $fol/*.mp4
+
+mkdir -p $yr/$mnt/$fol/text
+rm $yr/$mnt/$fol/*.jpeg
+rm $yr/$mnt/$fol/*.mp4
 rm msgstore*
-cp /data_mirror/data_ce/null/10/com.whatsapp/databases/msgstore.db .
-sqlite3 msgstore.db -cmd ".headers off" "select _id from message where chat_row_id = 67;" > "$fol/text/id.txt"
-sqlite3 msgstore.db -cmd ".headers off" "select text_data from message where chat_row_id = 67;" > "$fol/text/text.txt"
+# NEED ROOTED PHONE AND FIND WHATSAPP DATABASE PATH LIKE BELOW AND REPLACE BELOW LINE (user 0 for main profile 10 for work space(Ex: ISLAND FOR WORK PROFILE)
+cp /data/user/10/com.whatsapp/databases/msgstore.db .
+
+# BELOW "chat_row_id = 67" IS WHERE MY WHATSAPP STATUS THERE CHECK AND CONFIRM THAT ID BY OPENING YOUR DATABASE. IF THAT ID IS DIFFRENT REPLACE "67"
+
+sqlite3 msgstore.db -cmd ".headers off" "select _id from message where chat_row_id = 67;" > "$yr/$mnt/$fol/text/id.txt"
+sqlite3 msgstore.db -cmd ".headers off" "select text_data from message where chat_row_id = 67;" > "$yr/$mnt/$fol/text/text.txt"
 #sqlite3 msgstore.db -cmd ".headers off" "select sender_jid_row_id from message where chat_row_id = 67;" > "$fol/text/jid.txt"
+
+
 COUNT=1
 # GETTING HOW MANY LINES IN URL FILE
-STOP=$(wc -l "$fol/text/id.txt" | awk '{ print $1 }')
+STOP=$(wc -l "$yr/$mnt/$fol/text/id.txt" | awk '{ print $1 }')
 #STOP=1
 while [ $COUNT -le $STOP ]
 do
@@ -41,16 +45,22 @@ tt=1
 ff=".jpeg"
 fi
 text=$(echo $text | sed 's/\//\ or /g;s/"//g')
+
+# BELOW FORMATTING TEXT TO ONLY TAKE 248 CHARACTERS FROM FILE NAME BECAUSE LINUX ONLY SUPPORT 255 CHARACTERS IN FILENAME INCLUDING EXTENSION SO WE ONLY TAKING 248 FROM STATUS TEXT IN OUR FILENAME 
+stxt=$(echo $text | head -c 248)
+
 curl -O $url
 
-fn=$(echo $url | sed 's:.*/::')
+fn=$(echo $url | sed 's:.*/::;s/\?.*//') #fix fn having ? symbol
 
 echo "$COUNT downloading"
-#echo $tt
-echo $pno--$text
-./whatsapp-media-decrypt -o "$fol/$COUNT)$pno($text)$ff" -t $tt ./$fn $hex
 
-#./whatsapp-media-decrypt -o "$fol/$COUNT)$pno$ff" -t $tt ./$fn $hex
+echo $pno--$text
+
+# BUILD "whatsapp-media-decrypt" FROM "https://github.com/ddz/whatsapp-media-decrypt"
+
+./whatsapp-media-decrypt -o "$yr/$mnt/$fol/$COUNT)$pno($stxt)$ff" -t $tt ./$fn $hex
+
 COUNT=$(($COUNT+1))
 done
 echo "all done"
