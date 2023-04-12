@@ -1,5 +1,5 @@
 yr=$(date +"%Y")
-mnt=$(date +"%B")
+mnt=$(date +"%m-%B")
 fol=$(date +%d-%m-%Y)
 
 mkdir -p $yr/$mnt/$fol/text
