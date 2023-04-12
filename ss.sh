@@ -13,7 +13,7 @@ cp /data/user/10/com.whatsapp/databases/msgstore.db .
 
 sqlite3 msgstore.db -cmd ".headers off" "select _id from message where chat_row_id = 67;" > "$yr/$mnt/$fol/text/id.txt"
 sqlite3 msgstore.db -cmd ".headers off" "select text_data from message where chat_row_id = 67;" > "$yr/$mnt/$fol/text/text.txt"
-#sqlite3 msgstore.db -cmd ".headers off" "select sender_jid_row_id from message where chat_row_id = 67;" > "$fol/text/jid.txt"
+#sqlite3 msgstore.db -cmd ".headers off" "select sender_jid_row_id from message where chat_row_id = 67;" > "$yr/$mnt/$fol/text/jid.txt"
 
 
 COUNT=1
@@ -22,7 +22,7 @@ STOP=$(wc -l "$yr/$mnt/$fol/text/id.txt" | awk '{ print $1 }')
 #STOP=1
 while [ $COUNT -le $STOP ]
 do
-id=$(sed "$COUNT!d" "$fol/text/id.txt")
+id=$(sed "$COUNT!d" "$yr/$mnt/$fol/text/id.txt")
 echo "Making $COUNT text"
 url=$(sqlite3 msgstore.db -cmd ".headers off" "select message_url from message_media where message_row_id = $id;")
 
