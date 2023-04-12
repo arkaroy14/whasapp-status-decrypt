@@ -6,7 +6,7 @@ TO USE THIS SCRIPT U NEED
 
 2. TERMUX APP
 
-3. INSTALL tsu IN TERMUX 
+3. INSTALL tsu,curl,sqlite IN TERMUX. RUN "pkg install curl && pkg install sqlite && pkg install tsu"
 
 4. GOTO https://github.com/ddz/whatsapp-media-decrypt AND BUILD IT U WILL GET "whatsapp-media-decrypt" BINARY
 
